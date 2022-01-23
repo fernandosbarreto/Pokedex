@@ -72,6 +72,7 @@ class _PokeListPageState extends State<PokeListPage> {
   Widget _listItem(PokemonModel pokemon) => Column(
         children: [
           PokemonCard(
+            onTap: controller.getPokemons,
             image: pokemon.sprites.frontDefault,
             name: 'Bulbasaur',
             number: '001',

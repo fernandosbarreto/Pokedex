@@ -32,7 +32,11 @@ class PokeListController {
   ];
 
   Future<void> onInit() async {
-    pokemon = await _pokemonRepository.featchPokemon(pokemonId: 6);
+    pokemon = await _pokemonRepository.fetchOnePokemon(pokemonId: 6);
+  }
+
+  Future<void> getPokemons() async {
+    await _pokemonRepository.fetchAllPokemon();
   }
 
   String get pokemonSprite => pokemon.sprites.frontDefault;

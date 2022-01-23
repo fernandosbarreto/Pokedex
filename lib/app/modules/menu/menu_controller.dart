@@ -55,7 +55,7 @@ class MenuController extends NotifierStore<Exception, int> {
 
     int value = state + 1;
     update(value);
-    pokemon = await _pokemonRepository.featchPokemon(pokemonId: value);
+    pokemon = await _pokemonRepository.fetchOnePokemon(pokemonId: value);
     // if (value < 5) {
     //   update(value);
     // } else {
