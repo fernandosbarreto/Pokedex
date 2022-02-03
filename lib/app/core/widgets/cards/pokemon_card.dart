@@ -24,7 +24,7 @@ class PokemonCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
           child: Stack(
             children: [
               Container(
@@ -48,11 +48,11 @@ class PokemonCard extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 children: [
                   Positioned(
-                    top: -25,
-                    left: -15,
+                    top: -15,
+                    left: -18,
                     child: SizedBox(
-                      height: 150,
-                      width: 150,
+                      height: 145,
+                      width: 145,
                       child: image != '' && image != null
                           ? Image.network(
                               image!,
