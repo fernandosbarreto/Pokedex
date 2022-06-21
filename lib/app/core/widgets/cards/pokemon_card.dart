@@ -15,7 +15,8 @@ class PokemonCard extends StatelessWidget {
     required this.image,
     required this.types,
     this.name = 'Pokémon',
-    this.number = '000', this.onTap,
+    this.number = '000',
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -60,8 +61,8 @@ class PokemonCard extends StatelessWidget {
                             )
                           : const Padding(
                               padding: EdgeInsets.all(50),
-                              child:
-                                  CircularProgressIndicator(color: Colors.white),
+                              child: CircularProgressIndicator(
+                                  color: Colors.white),
                             ),
                     ),
                   ),
@@ -69,7 +70,8 @@ class PokemonCard extends StatelessWidget {
                     right: 0,
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(80)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(80)),
                         // color: PoketypeHelper.getPokeColorByString(types[0]),
                         gradient: LinearGradient(
                           stops: const [0.1, 0.25],
@@ -85,7 +87,7 @@ class PokemonCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(left: 5, right: 20),
+                    padding: const EdgeInsets.only(left: 5),
                     height: 100,
                     child: Row(
                       children: [

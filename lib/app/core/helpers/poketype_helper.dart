@@ -46,14 +46,14 @@ class PoketypeHelper {
 
   static String getPoketypePngByString(String key) {
     if (!_poketypesMap.containsKey(key)) {
-      print(key);
+      debugPrint(key);
     }
     return _poketypesMap[key]!;
   }
 
   static Color getPokeColorByString(String key) {
     if (!_typeColor.containsKey(key)) {
-      print(key);
+      debugPrint(key);
     }
     return _typeColor[key]!;
   }

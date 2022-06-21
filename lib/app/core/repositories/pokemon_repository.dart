@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pokedex/app/core/models/pokemon_info_model.dart';
 import 'package:pokedex/app/core/models/pokemon_model.dart';
 
@@ -22,19 +23,21 @@ class PokemonRepository {
 
     try {
       final response = await dio.get(_url);
-      final list = response.data as List;
+      final pokeInfoList = response.data as List;
       List<PokemonInfoModel> pokemons = [];
-      for (var item in list) {
+
+      //TODO: make a helper to it
+      for (var item in pokeInfoList) {
         final pokeInfo = PokemonInfoModel.fromJson(item);
         if (pokemons.any((element) => element.number == pokeInfo.number)) {
-          print('${pokeInfo.number} repetido');
+          debugPrint('${pokeInfo.number} repetido');
         } else {
           pokemons.add(pokeInfo);
         }
       }
       return pokemons;
     } catch (e) {
-      throw Exception('Não foi possivel buscar dos Pokemons');
+      throw Exception('Não foi possivel buscar os Pokemons');
     }
   }
 }
