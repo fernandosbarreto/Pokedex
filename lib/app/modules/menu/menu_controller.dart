@@ -40,7 +40,12 @@ class MenuController extends NotifierStore<Exception, int> {
   ];
 
   final cardRoutes = [
-    () => Modular.to.pushNamed('/poke-list'),
+    () => Modular.to.pushNamed('/poke-list/'),
+    // () => Modular.to.pushNamed('/movements/'),
+    // () => Modular.to.pushNamed('/skills/'),
+    // () => Modular.to.pushNamed('/items/'),
+    // () => Modular.to.pushNamed('/locations/'),
+    // () => Modular.to.pushNamed('/type-charts/'),
     () => debugPrint('b'),
     () => debugPrint('c'),
     () => debugPrint('d'),

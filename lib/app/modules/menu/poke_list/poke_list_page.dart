@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/app/core/models/pokemon_info_model.dart';
-import 'package:pokedex/app/core/utils/poke_colors.dart';
-import 'package:pokedex/app/core/widgets/cards/pokemon_card.dart';
-import 'package:pokedex/app/core/widgets/fields/search_field.dart';
-import 'package:pokedex/app/modules/menu/poke_list/poke_list_store.dart';
+import 'package:pokedex/app/modules/menu/poke_list/blocs/pokemon_list_events.dart';
+
+import '../../../core/models/pokemon_info_model.dart';
+import '../../../core/utils/poke_colors.dart';
+import '../../../core/widgets/cards/pokemon_card.dart';
+import '../../../core/widgets/fields/search_field.dart';
+import 'blocs/pokemon_list_state.dart';
+import 'poke_list_controller.dart';
 
 class NewPokeListPage extends StatefulWidget {
   const NewPokeListPage({Key? key}) : super(key: key);
@@ -16,18 +18,18 @@ class NewPokeListPage extends StatefulWidget {
 }
 
 class _NewPokeListPageState extends State<NewPokeListPage> {
-  final store = Modular.get<PokeListStore>();
+  final controller = Modular.get<PokeListController>();
 
   @override
   void initState() {
-    store.getPokemonList();
     super.initState();
+    controller.pokemonListBloc.inputPokemonList.add(LoadPokemonListEvent());
   }
 
   @override
   void dispose() {
+    controller.pokemonListBloc.inputPokemonList.close();
     super.dispose();
-    store.destroy();
   }
 
   @override
@@ -62,30 +64,49 @@ class _NewPokeListPageState extends State<NewPokeListPage> {
               ),
             ),
           ),
-          TripleBuilder<PokeListStore, Exception, List<PokemonInfoModel>>(
-              store: store,
-              builder: (context, triple) {
-                return Expanded(
+          StreamBuilder<PokemonListState>(
+            stream: controller.pokemonListBloc.stream,
+            builder: (context, AsyncSnapshot<PokemonListState> snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox.shrink();
+              }
+              var state = snapshot.data;
+
+              if (state is PokemonListError) {
+                return Text(snapshot.error.toString());
+              }
+              if (state is PokemonListLoading) {
+                return const Expanded(
                   child: CustomScrollView(
-                    physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                     slivers: [
-                      if (triple.isLoading)
-                        const SliverFillRemaining(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                      SliverFillRemaining(
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
-                      if (!triple.isLoading)
-                        SliverList(
-                          delegate:
-                              SliverChildBuilderDelegate((context, index) {
-                            return _listItem(triple.state[index]);
-                          }, childCount: triple.state.length),
-                        ),
+                      ),
                     ],
                   ),
                 );
-              }),
+              }
+              state = state as PokemonListData;
+              var list = state.data;
+
+              return Expanded(
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => _listItem(list[index]),
+                        childCount: state.data.length,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -95,7 +116,7 @@ class _NewPokeListPageState extends State<NewPokeListPage> {
     return Column(
       children: [
         PokemonCard(
-          onTap: () => Modular.to.pushNamed('/poke-info',arguments: pokemon),
+          onTap: () => Modular.to.pushNamed('poke-info/', arguments: pokemon),
           image: pokemon.thumbnailImage,
           name: pokemon.name,
           number: pokemon.number,

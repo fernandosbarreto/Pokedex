@@ -1,10 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pokedex/app/core/interfaces/pokemon_repository_interface.dart';
 import 'package:pokedex/app/core/models/pokemon_info_model.dart';
 import 'package:pokedex/app/core/models/pokemon_model.dart';
 
-class PokemonRepository {
-  final dio = Dio();
+class PokemonRepository extends IPokemonRepository {
+  final Dio dio;
+
+  PokemonRepository(this.dio);
+
+  @override
   Future<PokemonModel> fetchOnePokemon({required int pokemonId}) async {
     final _url = 'https://pokeapi.co/api/v2/pokemon/$pokemonId';
 
@@ -18,6 +23,7 @@ class PokemonRepository {
     }
   }
 
+  @override
   Future<List<PokemonInfoModel>> fetchAllPokemon() async {
     const _url = 'https://api.pokemon.com/br/api/pokedex/galar';
 
@@ -26,15 +32,17 @@ class PokemonRepository {
       final pokeInfoList = response.data as List;
       List<PokemonInfoModel> pokemons = [];
 
-      //TODO: make a helper to it
+      List<PokemonInfoModel> repetedPokemons = [];
+
       for (var item in pokeInfoList) {
         final pokeInfo = PokemonInfoModel.fromJson(item);
         if (pokemons.any((element) => element.number == pokeInfo.number)) {
-          debugPrint('${pokeInfo.number} repetido');
+          repetedPokemons.add(pokeInfo);
         } else {
           pokemons.add(pokeInfo);
         }
       }
+      debugPrint('${repetedPokemons.length} Pokémons repetidos');
       return pokemons;
     } catch (e) {
       throw Exception('Não foi possivel buscar os Pokemons');

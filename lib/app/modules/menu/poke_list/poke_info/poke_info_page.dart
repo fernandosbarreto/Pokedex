@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import 'package:pokedex/app/core/models/pokemon_info_model.dart';
-import 'package:pokedex/app/core/widgets/scaffolds/custom_scroll_scaffold.dart';
-import 'package:pokedex/app/modules/menu/poke_info/poke_info_controller.dart';
+import '../../../../core/models/pokemon_info_model.dart';
+import '../../../../core/widgets/scaffolds/custom_scroll_scaffold.dart';
+import 'poke_info_controller.dart';
 
 class PokeInfoPage extends StatefulWidget {
   final PokemonInfoModel pokemon;
