@@ -8,13 +8,19 @@ class ResizeOnTapWidget extends StatefulWidget {
   final Widget child;
   final bool runStartAnimation;
   final bool enabled;
-  const ResizeOnTapWidget({Key? key, required this.child, this.runStartAnimation = true, this.enabled = true}) : super(key: key);
+  const ResizeOnTapWidget({
+    Key? key,
+    required this.child,
+    this.runStartAnimation = true,
+    this.enabled = true,
+  }) : super(key: key);
 
   @override
-  _ResizeOnTapWidgetState createState() => _ResizeOnTapWidgetState();
+  State<ResizeOnTapWidget> createState() => _ResizeOnTapWidgetState();
 }
 
-class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProviderStateMixin {
+class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _sizeAnimation;
   late bool enabled;
@@ -24,8 +30,13 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProvid
     super.initState();
     enabled = widget.enabled;
     final double initialControllerValue = widget.runStartAnimation ? 0 : 1;
-    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1), value: initialControllerValue);
-    _sizeAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
+    _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+        value: initialControllerValue);
+    _sizeAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+        CurvedAnimation(
+            parent: _animationController, curve: Curves.elasticOut));
     if (widget.runStartAnimation) _animationController.forward();
   }
 
@@ -43,7 +54,8 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProvid
 
   void onDown() {
     if (enabled) {
-      _sizeAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(CurvedAnimation(parent: _animationController, curve: Curves.ease));
+      _sizeAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.ease));
       _animationController.reset();
       _animationController.forward();
     }
@@ -51,8 +63,10 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProvid
 
   void onUp() {
     if (enabled) {
-      _sizeAnimation = Tween<double>(begin: min(_sizeAnimation.value, 0.90), end: 1.0)
-          .animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
+      _sizeAnimation =
+          Tween<double>(begin: min(_sizeAnimation.value, 0.90), end: 1.0)
+              .animate(CurvedAnimation(
+                  parent: _animationController, curve: Curves.elasticOut));
       _animationController.reset();
       _animationController.forward();
     }
@@ -62,7 +76,8 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProvid
   Widget build(BuildContext context) {
     return RawGestureDetector(
       gestures: <Type, GestureRecognizerFactory>{
-        CustomPanGestureRecognizer: GestureRecognizerFactoryWithHandlers<CustomPanGestureRecognizer>(
+        CustomPanGestureRecognizer:
+            GestureRecognizerFactoryWithHandlers<CustomPanGestureRecognizer>(
           () => CustomPanGestureRecognizer(
             onPanDown: (_) {
               onDown();
@@ -76,7 +91,8 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget> with TickerProvid
       child: AnimatedBuilder(
         animation: _sizeAnimation,
         child: widget.child,
-        builder: (context, child) => Transform.scale(scale: _sizeAnimation.value, child: child),
+        builder: (context, child) =>
+            Transform.scale(scale: _sizeAnimation.value, child: child),
       ),
     );
   }

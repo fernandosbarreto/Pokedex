@@ -11,9 +11,11 @@ class AppWidget extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      title: 'Flutter Slidy',
+    return MaterialApp.router(
+      title: 'Pokedex',
       theme: ThemeData(primarySwatch: Colors.blue),
-    ).modular();
+      routeInformationParser: Modular.routeInformationParser,
+      routerDelegate: Modular.routerDelegate,
+    );
   }
 }

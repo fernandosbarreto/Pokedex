@@ -6,7 +6,7 @@ class PoketypeHelper {
     'bug': 'assets/poketypes/bug.png',
     'dark': 'assets/poketypes/dark.png',
     'dragon': 'assets/poketypes/dragon.png',
-    'eletric': 'assets/poketypes/eletric.png',
+    'electric': 'assets/poketypes/eletric.png',
     'fairy': 'assets/poketypes/fairy.png',
     'fighting': 'assets/poketypes/fighting.png',
     'fire': 'assets/poketypes/fire.png',
@@ -27,7 +27,7 @@ class PoketypeHelper {
     'bug': PokeColors.green2,
     'dark': PokeColors.purple1,
     'dragon': PokeColors.purple2,
-    'eletric': PokeColors.yellow1,
+    'electric': PokeColors.yellow1,
     'fairy': PokeColors.pink1,
     'fighting': PokeColors.orange1,
     'fire': PokeColors.red1,
@@ -45,9 +45,16 @@ class PoketypeHelper {
   };
 
   static String getPoketypePngByString(String key) {
+    if (!_poketypesMap.containsKey(key)) {
+      debugPrint(key);
+    }
     return _poketypesMap[key]!;
   }
+
   static Color getPokeColorByString(String key) {
+    if (!_typeColor.containsKey(key)) {
+      debugPrint(key);
+    }
     return _typeColor[key]!;
   }
 }

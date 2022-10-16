@@ -7,10 +7,10 @@ import 'package:pokedex/app/core/widgets/fields/search_field.dart';
 import 'package:pokedex/app/core/widgets/scaffolds/custom_scroll_scaffold.dart';
 
 class DesignSystemPage extends StatefulWidget {
-  const DesignSystemPage({Key? key}) : super(key: key);
+  const DesignSystemPage({super.key});
 
   @override
-  _DesignSystemPageState createState() => _DesignSystemPageState();
+  State<DesignSystemPage> createState() => _DesignSystemPageState();
 }
 
 class _DesignSystemPageState extends State<DesignSystemPage> {

@@ -1,29 +1,28 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:pokedex/app/core/repositories/pokemon_repository.dart';
-import 'package:pokedex/app/modules/menu/poke_list/poke_list_page.dart';
+
+import '../../core/interfaces/pokemon_repository_interface.dart';
+import '../../core/repositories/pokemon_repository.dart';
 import 'menu_controller.dart';
 import 'menu_page.dart';
-import 'poke_list/poke_list_controller.dart';
+import 'poke_list/poke_list_module.dart';
 
 class MenuModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.lazySingleton((i) => MenuController(i.get())),
-    Bind.factory((i) => PokeListController(i.get())),
 
     //repositories
-    Bind((i) => PokemonRepository()),
+    Bind<IPokemonRepository>((i) => PokemonRepository(i.get())),
   ];
 
   @override
   final List<ModularRoute> routes = [
     // ChildRoute('/', child: (_, args) => const DesignSystemPage()),
+
+    //routes
     ChildRoute('/', child: (_, args) => const MenuPage()),
-    ChildRoute('/poke-list', child: (_, args) => const PokeListPage()),
-    // ChildRoute('/poke-moves', child: (_, args) => const MenuPage()),
-    // ChildRoute('/poke-habilities', child: (_, args) => const MenuPage()),
-    // ChildRoute('/poke-items', child: (_, args) => const MenuPage()),
-    // ChildRoute('/poke-locals', child: (_, args) => const MenuPage()),
-    // ChildRoute('/poke-types', child: (_, args) => const MenuPage()),
+
+    //modules
+    ModuleRoute('/poke-list/', module: PokeListModule()),
   ];
 }

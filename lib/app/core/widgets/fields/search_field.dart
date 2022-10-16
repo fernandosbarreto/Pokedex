@@ -27,7 +27,7 @@ class SearchField extends StatelessWidget {
               top: 0,
               bottom: 0,
               left: 20,
-              child: Icon(FontAwesomeIcons.search, size: 20),
+              child: Icon(FontAwesomeIcons.magnifyingGlass, size: 20),
             ),
             TextFormField(
               onChanged: onChanged,
