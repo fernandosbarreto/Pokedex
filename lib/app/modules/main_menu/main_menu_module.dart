@@ -2,14 +2,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../core/interfaces/pokemon_repository_interface.dart';
 import '../../core/repositories/pokemon_repository.dart';
-import 'menu_controller.dart';
-import 'menu_page.dart';
+import 'main_menu_controller.dart';
+import 'main_menu_page.dart';
 import 'poke_list/poke_list_module.dart';
 
-class MenuModule extends Module {
+class MainMenuModule extends Module {
   @override
   final List<Bind> binds = [
-    Bind.lazySingleton((i) => MenuController(i.get())),
+    Bind.lazySingleton((i) => MainMenuController()),
 
     //repositories
     Bind<IPokemonRepository>((i) => PokemonRepository(i.get())),
@@ -20,7 +20,7 @@ class MenuModule extends Module {
     // ChildRoute('/', child: (_, args) => const DesignSystemPage()),
 
     //routes
-    ChildRoute('/', child: (_, args) => const MenuPage()),
+    ChildRoute('/', child: (_, args) => const MainMenuPage()),
 
     //modules
     ModuleRoute('/poke-list/', module: PokeListModule()),

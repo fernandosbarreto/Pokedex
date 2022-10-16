@@ -5,17 +5,17 @@ import 'package:pokedex/app/core/utils/poke_colors.dart';
 import 'package:pokedex/app/core/widgets/cards/option_card.dart';
 import 'package:pokedex/app/core/widgets/fields/search_field.dart';
 import 'package:pokedex/app/core/widgets/scaffolds/custom_scroll_scaffold.dart';
-import 'menu_controller.dart';
+import 'main_menu_controller.dart';
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+class MainMenuPage extends StatefulWidget {
+  const MainMenuPage({Key? key}) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<MainMenuPage> createState() => _MainMenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
-  final controller = Modular.get<MenuController>();
+class _MainMenuPageState extends State<MainMenuPage> {
+  final controller = Modular.get<MainMenuController>();
 
   @override
   Widget build(BuildContext context) {
