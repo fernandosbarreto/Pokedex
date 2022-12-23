@@ -8,11 +8,13 @@ class ResizeOnTapWidget extends StatefulWidget {
   final Widget child;
   final bool runStartAnimation;
   final bool enabled;
+  final double begin;
   const ResizeOnTapWidget({
     Key? key,
     required this.child,
     this.runStartAnimation = true,
     this.enabled = true,
+    this.begin = 0.9,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class _ResizeOnTapWidgetState extends State<ResizeOnTapWidget>
         vsync: this,
         duration: const Duration(seconds: 1),
         value: initialControllerValue);
-    _sizeAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+    _sizeAnimation = Tween<double>(begin: widget.begin, end: 1.0).animate(
         CurvedAnimation(
             parent: _animationController, curve: Curves.elasticOut));
     if (widget.runStartAnimation) _animationController.forward();

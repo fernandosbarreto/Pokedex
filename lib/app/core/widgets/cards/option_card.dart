@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:pokedex/app/core/utils/poke_colors.dart';
-import 'package:pokedex/app/core/widgets/resize_on_tap/resize_on_tap_widget.dart';
+import 'package:pokedex/app/core/widgets/animated_widgets/resize_on_tap_widget.dart';
 
 class OptionCard extends StatelessWidget {
   final String label;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:pokedex/app/core/helpers/poketype_helper.dart';
-import 'package:pokedex/app/core/widgets/resize_on_tap/resize_on_tap_widget.dart';
+import 'package:pokedex/app/core/widgets/animated_widgets/resize_on_tap_widget.dart';
 
 class PokemonCard extends StatelessWidget {
   final String? image;
@@ -76,9 +76,9 @@ class PokemonCard extends StatelessWidget {
                         gradient: LinearGradient(
                           stops: const [0.1, 0.25],
                           colors: [
-                            PoketypeHelper.getPokeColorByString(types[0])
+                            PoketypeHelper.getPokeColorByString(types.first)
                                 .withOpacity(0.1),
-                            PoketypeHelper.getPokeColorByString(types[0])
+                            PoketypeHelper.getPokeColorByString(types.first)
                           ],
                         ),
                       ),
@@ -113,7 +113,9 @@ class PokemonCard extends StatelessWidget {
                                 ),
                               ),
                               Row(
-                                children: [..._typesIcon('type')],
+                                children: [
+                                  ...PoketypeHelper.getTypeIcons(types)
+                                ],
                               )
                             ],
                           ),
@@ -141,52 +143,5 @@ class PokemonCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  List<Widget> _typesIcon(String value) {
-    int i = 0;
-    List<Widget> icons = [];
-    if (types.length > 5) {
-      while (i < 5) {
-        icons.add(
-          Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: SizedBox(
-              height: 25,
-              child: Image.asset(
-                PoketypeHelper.getPoketypePngByString(types[i]),
-              ),
-            ),
-          ), // jump to next iteration
-        );
-        i++;
-      }
-      return [
-        ...icons,
-        Text(
-          '+ ${types.length - 5}',
-          style: GoogleFonts.encodeSans(
-            fontSize: 15,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        )
-      ];
-    } else if (types.length <= 5) {
-      return [
-        for (var type in types)
-          Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: SizedBox(
-              height: 25,
-              child: Image.asset(
-                PoketypeHelper.getPoketypePngByString(type),
-              ),
-            ),
-          )
-      ];
-    } else {
-      return const [];
-    }
   }
 }
