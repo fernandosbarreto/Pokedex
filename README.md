@@ -16,7 +16,7 @@ This Pokedex can be used to stay up to date on pokemon types and their details.
 - **Flutter Modular** for dependency injection and routes [[pub.dev]](https://pub.dev/packages/flutter_modular) [[doc]](https://modular.flutterando.com.br/)
 
 ## About the modules
-This project has been developed using module structure, to allow the separation of each module in packages, facilitating the maintenance end cohesion of each module and domain.
+This project has been developed using module structure, to allow the separation of each module in packages, facilitating the maintenance end cohesion of each module.
 
  - **CoreModule**: responsible by providing a basic resources to all modules;
  - **MainMenuModule**: For the user to choose which information he wants to access;
