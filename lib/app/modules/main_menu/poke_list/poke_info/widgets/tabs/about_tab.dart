@@ -4,7 +4,19 @@ import 'package:pokedex/app/core/utils/poke_colors.dart';
 import 'package:pokedex/app/core/widgets/labels/info_and_label.dart';
 
 class AboutTab extends StatelessWidget {
-  const AboutTab({super.key});
+  final String description;
+  final String height;
+  final String weight;
+  final List<String> abilities;
+  final String category;
+  const AboutTab({
+    super.key,
+    required this.description,
+    required this.height,
+    required this.weight,
+    required this.abilities,
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,26 +25,47 @@ class AboutTab extends StatelessWidget {
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ihsjaiosa ljsakljs aljsakjdkjkfljsaçlf lskfla flkalçfks fksfklakf lfklakf lskf mflsaç fkça ç',
+              description,
               style: GoogleFonts.encodeSans(
-                fontSize: 12,
+                fontSize: 16,
                 color: PokeColors.grey2,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InfoAndLabel(
-                  info: '',
-                  label: 'Altura',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InfoAndLabel(
+                      info: height,
+                      label: 'Altura',
+                    ),
+                    const SizedBox(height: 20),
+                    InfoAndLabel(
+                      info: category,
+                      label: 'Categoria',
+                    ),
+                  ],
                 ),
-                InfoAndLabel(
-                  info: ' lbs',
-                  label: 'Peso',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InfoAndLabel(
+                      info: weight,
+                      label: 'Peso',
+                    ),
+                    const SizedBox(height: 20),
+                    InfoAndLabel(
+                      info: abilities.join('\n'),
+                      label: 'Habilidades',
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -37,8 +37,7 @@ class TabButton extends StatelessWidget {
                 label,
                 style: GoogleFonts.encodeSans(
                   fontSize: 12,
-                  color:
-                      isSelected ? selectedColor : Colors.grey.withOpacity(0.7),
+                  color: isSelected ? selectedColor : PokeColors.black1,
                   fontWeight: FontWeight.bold,
                 ),
               ),

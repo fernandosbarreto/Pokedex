@@ -120,7 +120,10 @@ class _NewPokeListPageState extends State<NewPokeListPage> {
     return Column(
       children: [
         PokemonCard(
-          onTap: () => Modular.to.pushNamed('poke-info/', arguments: pokemon),
+          onTap: () {
+            Modular.to.pushNamed('poke-info/', arguments: pokemon);
+            controller.store.pokemonInfoModel = pokemon;
+          },
           image: pokemon.thumbnailImage,
           name: pokemon.name,
           number: pokemon.number,

@@ -10,8 +10,9 @@ class PokemonListData implements PokemonListState {
 
 class PokemonListError implements PokemonListState {
   final String message;
+  final StackTrace stackTrace;
 
-  const PokemonListError(this.message);
+  const PokemonListError(this.message, this.stackTrace);
 }
 
 class PokemonListLoading implements PokemonListState {

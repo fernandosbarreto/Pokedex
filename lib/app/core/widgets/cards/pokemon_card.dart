@@ -126,7 +126,7 @@ class PokemonCard extends StatelessWidget {
                 ],
               ),
               Positioned(
-                right: 5,
+                right: 4,
                 bottom: 0,
                 child: Text(
                   '#$number',

@@ -14,10 +14,10 @@ class InfoAndLabel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          info,
+          info == '' ? '???' : info,
           style: GoogleFonts.encodeSans(
             fontSize: 14,
-            color: PokeColors.grey3,
+            color: PokeColors.black1,
             fontWeight: FontWeight.bold,
           ),
         ),

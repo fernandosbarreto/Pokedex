@@ -5,16 +5,18 @@ import 'package:pokedex/app/core/helpers/poketype_helper.dart';
 import 'package:pokedex/app/core/utils/poke_colors.dart';
 import 'package:pokedex/app/core/widgets/buttons/tab_button.dart';
 import 'package:pokedex/app/core/widgets/cards/pokemon_display_card.dart';
-import 'package:pokedex/app/core/widgets/labels/info_and_label.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/blocs/pokemon_detail/pokemon_detail_event.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/blocs/pokemon_detail/pokemon_detail_state.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/blocs/pokemon_info/pokemon_info_events.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/blocs/pokemon_info/pokemon_info_state.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/widgets/status_label.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/poke_info/widgets/tabs/about_tab.dart';
 
-import '../../../../core/models/pokemon_info_model.dart';
 import 'poke_info_controller.dart';
 
 class PokeInfoPage extends StatefulWidget {
-  final PokemonInfoModel pokemonInfoModel;
   const PokeInfoPage({
     Key? key,
-    required this.pokemonInfoModel,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,17 @@ class _PokeInfoPageState extends State<PokeInfoPage>
   );
 
   @override
+  void initState() {
+    super.initState();
+    controller.onInit();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
@@ -38,7 +51,7 @@ class _PokeInfoPageState extends State<PokeInfoPage>
       backgroundColor: Colors.white,
       body: SizedBox(
         width: double.infinity,
-        height: double.infinity,
+        height: screenSize.height,
         child: DefaultTabController(
           length: 3,
           child: CustomScrollView(
@@ -47,8 +60,12 @@ class _PokeInfoPageState extends State<PokeInfoPage>
                 child: Stack(
                   children: [
                     PokemonDisplayCard(
-                      pokemonImage: widget.pokemonInfoModel.thumbnailImage,
-                      pokemonType: widget.pokemonInfoModel.type.first,
+                      pokemonImage: controller
+                              .pokeStore.pokemonInfoModel?.thumbnailImage ??
+                          '',
+                      pokemonType:
+                          controller.pokeStore.pokemonInfoModel?.type.first ??
+                              '',
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 30, top: 60),
@@ -65,11 +82,14 @@ class _PokeInfoPageState extends State<PokeInfoPage>
                     children: [
                       TabButton(
                         isSelected: tabController.index == 0,
-                        label: 'Sobre',
+                        label: 'About',
                         selectedColor: PoketypeHelper.getPokeColorByString(
-                            widget.pokemonInfoModel.type.first),
+                            controller.pokeStore.pokemonInfoModel?.type.first ??
+                                ''),
                         onTap: () {
                           setState(() {
+                            controller.pokemonInfoBloc.inputPokemonInfo
+                                .add(LoadPokemonInfoEvent());
                             tabController.animateTo(
                               0,
                               duration: const Duration(milliseconds: 500),
@@ -79,11 +99,14 @@ class _PokeInfoPageState extends State<PokeInfoPage>
                         },
                       ),
                       TabButton(
-                        label: 'Status',
+                        label: 'Stats',
                         isSelected: tabController.index == 1,
                         selectedColor: PoketypeHelper.getPokeColorByString(
-                            widget.pokemonInfoModel.type.first),
+                            controller.pokeStore.pokemonInfoModel?.type.first ??
+                                ''),
                         onTap: () {
+                          controller.pokemonDetailBloc.inputPokemonDetail
+                              .add(LoadPokemonDetailEvent());
                           setState(() {
                             tabController.animateTo(
                               1,
@@ -94,10 +117,11 @@ class _PokeInfoPageState extends State<PokeInfoPage>
                         },
                       ),
                       TabButton(
-                        label: 'Evoluções',
+                        label: 'Evolution',
                         isSelected: tabController.index == 2,
                         selectedColor: PoketypeHelper.getPokeColorByString(
-                            widget.pokemonInfoModel.type.first),
+                            controller.pokeStore.pokemonInfoModel?.type.first ??
+                                ''),
                         onTap: () {
                           setState(() {
                             tabController.animateTo(
@@ -115,19 +139,126 @@ class _PokeInfoPageState extends State<PokeInfoPage>
               SliverFillRemaining(
                 child: TabBarView(
                   controller: tabController,
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    _infoTab(context),
-                    Container(
-                      width: screenSize.width,
-                      color: Colors.blue,
+                    StreamBuilder<PokemonInfoState>(
+                      stream: controller.pokemonInfoBloc.stream,
+                      builder:
+                          (context, AsyncSnapshot<PokemonInfoState> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const SizedBox.shrink();
+                        }
+                        var state = snapshot.data;
+
+                        if (state is PokemonInfoError) {
+                          return Center(
+                            child: Text(
+                              'Cannot load information ${snapshot.error ?? ''}',
+                              style: GoogleFonts.encodeSans(
+                                fontSize: 16,
+                                color: PokeColors.grey2,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }
+                        if (state is PokemonInfoLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        state = state as PokemonInfoData;
+                        var pokeInfo = state.data;
+
+                        return AboutTab(
+                          description: pokeInfo.flavorTextEntries
+                              .firstWhere(
+                                  (element) => element.language.name == 'en')
+                              .flavorText
+                              .replaceAll('\n', ' '),
+                          height:
+                              '${controller.pokeStore.pokemonInfoModel?.height ?? ''}',
+                          weight:
+                              '${controller.pokeStore.pokemonInfoModel?.weight ?? ''}',
+                          abilities: controller
+                                  .pokeStore.pokemonInfoModel?.abilities ??
+                              [],
+                          category: pokeInfo.genera[7].genus
+                              .replaceAll('Pokémon', ''),
+                        );
+                      },
                     ),
-                    Container(
+                    StreamBuilder<PokemonDetailState>(
+                      stream: controller.pokemonDetailBloc.stream,
+                      builder: (context,
+                          AsyncSnapshot<PokemonDetailState> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const SizedBox.shrink();
+                        }
+                        var state = snapshot.data;
+
+                        if (state is PokemonInfoError) {
+                          return Center(
+                            child: Text(
+                              'Cannot load information ${snapshot.error ?? ''}',
+                              style: GoogleFonts.encodeSans(
+                                fontSize: 16,
+                                color: PokeColors.grey2,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }
+                        if (state is PokemonInfoLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        state = state as PokemonDetailData;
+                        var pokeDetail = state.data;
+
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var element in pokeDetail.stats)
+                                  ...{
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 14),
+                                      child: StatusLabel(
+                                        pokemonType: controller.pokeStore
+                                            .pokemonInfoModel!.type.first,
+                                        label: element.stat.name,
+                                        value: '${element.baseStat}',
+                                      ),
+                                    )
+                                  }.toList(),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
                       width: screenSize.width,
-                      color: Colors.yellow,
+                      child: Center(
+                        child: Text(
+                          'Work in progress',
+                          style: GoogleFonts.encodeSans(
+                            fontSize: 16,
+                            color: PokeColors.grey2,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -140,7 +271,7 @@ class _PokeInfoPageState extends State<PokeInfoPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '#${widget.pokemonInfoModel.number}',
+          '#${controller.pokeStore.pokemonInfoModel?.number ?? ''}',
           maxLines: 1,
           style: GoogleFonts.encodeSans(
             fontSize: 16,
@@ -149,7 +280,7 @@ class _PokeInfoPageState extends State<PokeInfoPage>
           ),
         ),
         Text(
-          widget.pokemonInfoModel.name,
+          controller.pokeStore.pokemonInfoModel?.name ?? '',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.encodeSans(
@@ -161,63 +292,11 @@ class _PokeInfoPageState extends State<PokeInfoPage>
         const SizedBox(height: 5),
         Row(
           children: [
-            ...PoketypeHelper.getTypeIcons(widget.pokemonInfoModel.type)
+            ...PoketypeHelper.getTypeIcons(
+                controller.pokeStore.pokemonInfoModel?.type ?? [])
           ],
         )
       ],
     );
   }
-
-  Widget _infoTab(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Text(
-                'ihsjaiosa ljsakljs aljsakjdkjkfljsaçlf lskfla flkalçfks fksfklakf lfklakf lskf mflsaç fkça ç',
-                style: GoogleFonts.encodeSans(
-                  fontSize: 12,
-                  color: PokeColors.grey2,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InfoAndLabel(
-                        info: '${widget.pokemonInfoModel.height}',
-                        label: 'Altura',
-                      ),
-                      const SizedBox(height: 20),
-                      const InfoAndLabel(
-                        info: '???',
-                        label: 'Categoria',
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InfoAndLabel(
-                        info: '${widget.pokemonInfoModel.weight} lbs',
-                        label: 'Peso',
-                      ),
-                      const SizedBox(height: 20),
-                      InfoAndLabel(
-                        info: widget.pokemonInfoModel.abilities.first,
-                        label: 'Habilidade',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
 }
