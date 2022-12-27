@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 class PokeColors {
-
   static const Color green1 = Color(0xff4FC1A7);
   static const Color green2 = Color(0xff90CAA7);
   static const Color blue1 = Color(0xff57A9F3);
@@ -19,4 +18,5 @@ class PokeColors {
   static const Color grey3 = Color(0xffA1A3A5);
   static const Color metal1 = Color(0xffA5A5B4);
   static const Color pink1 = Color(0xffF1A9F1);
+  static const Color black1 = Color(0xff50555B);
 }

@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pokedex/app/core/utils/poke_colors.dart';
 
 class PoketypeHelper {
@@ -56,5 +57,52 @@ class PoketypeHelper {
       debugPrint(key);
     }
     return _typeColor[key]!;
+  }
+
+  static List<Widget> getTypeIcons(List<String> types) {
+    int i = 0;
+    List<Widget> icons = [];
+    if (types.length > 5) {
+      while (i < 5) {
+        icons.add(
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: SizedBox(
+              height: 25,
+              child: Image.asset(
+                PoketypeHelper.getPoketypePngByString(types[i]),
+              ),
+            ),
+          ), // jump to next iteration
+        );
+        i++;
+      }
+      return [
+        ...icons,
+        Text(
+          '+ ${types.length - 5}',
+          style: GoogleFonts.encodeSans(
+            fontSize: 15,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ];
+    } else if (types.length <= 5) {
+      return [
+        for (var type in types)
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: SizedBox(
+              height: 25,
+              child: Image.asset(
+                PoketypeHelper.getPoketypePngByString(type),
+              ),
+            ),
+          )
+      ];
+    } else {
+      return const [];
+    }
   }
 }

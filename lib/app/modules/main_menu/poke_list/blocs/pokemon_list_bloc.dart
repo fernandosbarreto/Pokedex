@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:pokedex/app/core/interfaces/pokemon_repository_interface.dart';
 
-import '../../../../core/models/pokemon_info_model.dart';
 import 'pokemon_list_events.dart';
 import 'pokemon_list_state.dart';
 
@@ -23,12 +22,12 @@ class PokemonListBloc {
   Stream<PokemonListState> get stream => _outputPokemonListController.stream;
 
   _mapEventToState(PokemonListEvent event) async {
-    List<PokemonInfoModel> pokemons = [];
+    PokemonListState pokemons = const PokemonListNone();
 
     if (event is LoadPokemonListEvent) {
       _outputPokemonListController.add(const PokemonListLoading());
-      pokemons = await _pokemonRepository.fetchAllPokemon();
+      pokemons = await _pokemonRepository.getAllPokemon();
     }
-    _outputPokemonListController.add(PokemonListData(pokemons));
+    _outputPokemonListController.add(pokemons);
   }
 }

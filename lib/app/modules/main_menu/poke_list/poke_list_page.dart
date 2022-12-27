@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/app/modules/menu/poke_list/blocs/pokemon_list_events.dart';
+import 'package:pokedex/app/modules/main_menu/poke_list/blocs/pokemon_list_events.dart';
 
 import '../../../core/models/pokemon_info_model.dart';
 import '../../../core/utils/poke_colors.dart';
@@ -41,12 +41,16 @@ class _NewPokeListPageState extends State<NewPokeListPage> {
             alignment: Alignment.centerLeft,
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 20),
-            child: Text(
-              'Pokédex',
-              style: GoogleFonts.encodeSans(
-                color: PokeColors.red2,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+            child: InkWell(
+              onTap: () => Modular.to.pop(),
+              borderRadius: BorderRadius.circular(10),
+              child: Text(
+                'Pokédex',
+                style: GoogleFonts.encodeSans(
+                  color: PokeColors.red2,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -116,7 +120,10 @@ class _NewPokeListPageState extends State<NewPokeListPage> {
     return Column(
       children: [
         PokemonCard(
-          onTap: () => Modular.to.pushNamed('poke-info/', arguments: pokemon),
+          onTap: () {
+            Modular.to.pushNamed('poke-info/', arguments: pokemon);
+            controller.store.pokemonInfoModel = pokemon;
+          },
           image: pokemon.thumbnailImage,
           name: pokemon.name,
           number: pokemon.number,

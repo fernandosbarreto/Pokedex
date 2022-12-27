@@ -40,7 +40,6 @@ dependencies:
   dio: ^4.0.6
   google_fonts: ^3.0.1
   font_awesome_flutter: ^10.2.1
-  flutter_triple: ^1.2.7+4
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +66,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/poketypes/
+    - assets/pokeballs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
